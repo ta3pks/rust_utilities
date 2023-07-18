@@ -1,42 +1,53 @@
+#[cfg(feature = "async")]
+use std::{future::Future, pin::Pin};
+
 macro_rules! impl_for{
     ($($t:ty),*) => {
         $(
         impl DurationExt for $t {
             fn millis(&self) -> std::time::Duration {
-                (*self as u64).millis()
+                std::time::Duration::from_millis(*self as u64)
             }
             fn seconds(&self) -> std::time::Duration {
-                (*self as u64).seconds()
+                std::time::Duration::from_secs(*self as u64)
             }
             fn minutes(&self) -> std::time::Duration {
-                (*self as u64).minutes()
+                std::time::Duration::from_secs(self.seconds().as_secs() * 60)
             }
             fn hours(&self) -> std::time::Duration {
-                (*self as u64).hours()
+                std::time::Duration::from_secs(self.minutes().as_secs() * 60)
             }
         }
     )*
     };
 }
+
 pub trait DurationExt {
     fn millis(&self) -> std::time::Duration;
     fn seconds(&self) -> std::time::Duration;
     fn minutes(&self) -> std::time::Duration;
     fn hours(&self) -> std::time::Duration;
 }
-impl DurationExt for u64 {
-    fn millis(&self) -> std::time::Duration {
-        std::time::Duration::from_millis(*self)
-    }
-    fn seconds(&self) -> std::time::Duration {
-        std::time::Duration::from_secs(*self)
-    }
-    fn minutes(&self) -> std::time::Duration {
-        std::time::Duration::from_secs(self.seconds().as_secs() * 60)
-    }
-    fn hours(&self) -> std::time::Duration {
-        std::time::Duration::from_secs(self.minutes().as_secs() * 60)
+
+impl_for!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f64, f32);
+
+#[cfg(feature = "async")]
+type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
+#[cfg(feature = "time_async")]
+pub trait SleepAsyncExt {
+    fn sleep_async(&self) -> BoxFuture<'_, ()>;
+}
+#[cfg(feature = "time_async")]
+impl SleepAsyncExt for std::time::Duration {
+    fn sleep_async(&self) -> BoxFuture<'_, ()> {
+        Box::pin(tokio::time::sleep(*self))
     }
 }
-
-impl_for!(u8, u16, u32, usize, i8, i16, i32, i64, isize, f64, f32);
+pub trait SleepExt {
+    fn sleep_sync(&self);
+}
+impl SleepExt for std::time::Duration {
+    fn sleep_sync(&self) {
+        std::thread::sleep(*self)
+    }
+}
