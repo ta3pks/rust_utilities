@@ -3,6 +3,8 @@ name = "rust_utilities"
 version = "0.4.0"
 edition = "2021"
 repository="https://github.com/ta3pks/rust_utilities"
+description = "Rust utilities to help with projects"
+license="MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
