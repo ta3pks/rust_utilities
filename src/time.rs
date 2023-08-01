@@ -51,3 +51,36 @@ impl SleepExt for std::time::Duration {
         std::thread::sleep(*self)
     }
 }
+pub trait HMS {
+    fn hms(&self) -> String;
+    fn hmsxxx(&self) -> String;
+}
+
+impl HMS for std::time::Duration {
+    fn hms(&self) -> String {
+        let secs = self.as_secs();
+        let hours = secs / 3600;
+        let minutes = (secs % 3600) / 60;
+        let seconds = secs % 60;
+        format!("{:02}:{:02}:{:02}", hours, minutes, seconds)
+    }
+    fn hmsxxx(&self) -> String {
+        let secs = self.as_secs();
+        let hours = secs / 3600;
+        let minutes = (secs % 3600) / 60;
+        let seconds = secs % 60;
+        let millis = self.subsec_millis();
+        format!("{:02}:{:02}:{:02}.{:03}", hours, minutes, seconds, millis)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_hms() {
+        let d = 1.hours() + 1.minutes() + 1.seconds() + 10.millis();
+        assert_eq!(d.hms(), "01:01:01");
+        assert_eq!(d.hmsxxx(), "01:01:01.010");
+    }
+}
