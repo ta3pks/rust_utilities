@@ -1,3 +1,4 @@
+use std::time::UNIX_EPOCH;
 #[cfg(feature = "async")]
 use std::{future::Future, pin::Pin};
 
@@ -83,4 +84,20 @@ mod tests {
         assert_eq!(d.hms(), "01:01:01");
         assert_eq!(d.hmsxxx(), "01:01:01.010");
     }
+}
+
+pub fn now_millis() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64
+}
+pub fn now_micros() -> u64 {
+    UNIX_EPOCH.elapsed().unwrap_or_default().as_micros() as u64
+}
+pub fn now_secs() -> u64 {
+    UNIX_EPOCH.elapsed().unwrap_or_default().as_secs()
+}
+pub fn now_nanos() -> u64 {
+    UNIX_EPOCH.elapsed().unwrap_or_default().as_nanos() as u64
 }
