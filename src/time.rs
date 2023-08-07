@@ -12,12 +12,6 @@ macro_rules! impl_for{
             fn seconds(&self) -> std::time::Duration {
                 std::time::Duration::from_secs(*self as u64)
             }
-            fn minutes(&self) -> std::time::Duration {
-                std::time::Duration::from_secs(self.seconds().as_secs() * 60)
-            }
-            fn hours(&self) -> std::time::Duration {
-                std::time::Duration::from_secs(self.minutes().as_secs() * 60)
-            }
         }
     )*
     };
@@ -26,8 +20,15 @@ macro_rules! impl_for{
 pub trait DurationExt {
     fn millis(&self) -> std::time::Duration;
     fn seconds(&self) -> std::time::Duration;
-    fn minutes(&self) -> std::time::Duration;
-    fn hours(&self) -> std::time::Duration;
+    fn minutes(&self) -> std::time::Duration {
+        self.seconds() * 60
+    }
+    fn hours(&self) -> std::time::Duration {
+        self.minutes() * 60
+    }
+    fn days(&self) -> std::time::Duration {
+        self.hours() * 24
+    }
 }
 
 impl_for!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f64, f32);
