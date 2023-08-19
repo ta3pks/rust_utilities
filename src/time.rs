@@ -102,3 +102,6 @@ pub fn now_secs() -> u64 {
 pub fn now_nanos() -> u64 {
     UNIX_EPOCH.elapsed().unwrap_or_default().as_nanos() as u64
 }
+pub fn now_days() -> u32 {
+    (now_secs() / (60 * 60 * 24)) as u32
+}
