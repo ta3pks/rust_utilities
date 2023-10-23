@@ -1,6 +1,6 @@
 [package]
 name = "rust_helpers"
-version = "1.2.1"
+version = "2.0.0"
 edition = "2021"
 repository="https://github.com/ta3pks/rust_utilities"
 description = "Rust utilities to help with projects"
@@ -10,9 +10,9 @@ license="MIT"
 
 [dependencies]
 serde = { version = "1.0.188", default-features = false, optional = true, features = ["std"] }
-serde_json = { version = "1.0.105", default-features = false, optional = true, features = ["std"] }
+serde_json = { version = "1.0.107", default-features = false, optional = true, features = ["std"] }
 tap = "1.0.1"
-tokio = { version = "1.29.1", default-features=false,  optional = true }
+tokio = { version = "1.32.0", default-features=false,  optional = true }
 
 [features]
 default = ["time_async","json"]

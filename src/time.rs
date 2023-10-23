@@ -1,4 +1,4 @@
-use std::time::UNIX_EPOCH;
+use std::time::{SystemTime, UNIX_EPOCH};
 #[cfg(feature = "async")]
 use std::{future::Future, pin::Pin};
 
@@ -45,11 +45,48 @@ impl SleepAsyncExt for std::time::Duration {
         Box::pin(tokio::time::sleep(*self))
     }
 }
+
+pub trait TimeExt {
+    fn unix_secs(&self) -> u64;
+    fn unix_millis(&self) -> u64;
+    fn unix_nanos(&self) -> u64;
+    fn unix_micros(&self) -> u64;
+    fn unix_days(&self) -> u32 {
+        (self.unix_secs() / (60 * 60 * 24)) as u32
+    }
+}
+impl TimeExt for SystemTime {
+    fn unix_millis(&self) -> u64 {
+        self.duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis() as u64
+    }
+
+    fn unix_secs(&self) -> u64 {
+        self.duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs()
+    }
+
+    fn unix_nanos(&self) -> u64 {
+        self.duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos() as u64
+    }
+
+    fn unix_micros(&self) -> u64 {
+        self.duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_micros() as u64
+    }
+}
+
 pub trait SleepExt {
     fn sleep_sync(&self);
 }
 impl SleepExt for std::time::Duration {
     fn sleep_sync(&self) {
+        SystemTime::now().unix_secs();
         std::thread::sleep(*self)
     }
 }
@@ -75,7 +112,9 @@ impl HMS for std::time::Duration {
         format!("{:02}:{:02}:{:02}.{:03}", hours, minutes, seconds, millis)
     }
 }
-
+pub fn now() -> SystemTime {
+    SystemTime::now()
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -85,23 +124,4 @@ mod tests {
         assert_eq!(d.hms(), "01:01:01");
         assert_eq!(d.hmsxxx(), "01:01:01.010");
     }
-}
-
-pub fn now_millis() -> u64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_millis() as u64
-}
-pub fn now_micros() -> u64 {
-    UNIX_EPOCH.elapsed().unwrap_or_default().as_micros() as u64
-}
-pub fn now_secs() -> u64 {
-    UNIX_EPOCH.elapsed().unwrap_or_default().as_secs()
-}
-pub fn now_nanos() -> u64 {
-    UNIX_EPOCH.elapsed().unwrap_or_default().as_nanos() as u64
-}
-pub fn now_days() -> u32 {
-    (now_secs() / (60 * 60 * 24)) as u32
 }
