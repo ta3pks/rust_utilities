@@ -7,6 +7,7 @@ mod macros;
 #[cfg(feature = "md5")]
 mod md5;
 mod num_traits;
+mod result_ext;
 mod time;
 #[cfg(feature = "base64")]
 pub use base64::*;
@@ -17,5 +18,6 @@ pub use macros::*;
 #[cfg(feature = "md5")]
 pub use md5::*;
 pub use num_traits::*;
+pub use result_ext::*;
 pub use tap::prelude::*;
 pub use time::*;
