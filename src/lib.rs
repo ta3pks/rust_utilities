@@ -21,3 +21,6 @@ pub use num_traits::*;
 pub use result_ext::*;
 pub use tap::prelude::*;
 pub use time::*;
+
+mod iter_ext;
+pub use iter_ext::*;

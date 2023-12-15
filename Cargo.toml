@@ -1,6 +1,6 @@
 [package]
 name = "rust_helpers"
-version = "2.2.0"
+version = "2.3.0"
 edition = "2021"
 repository="https://github.com/ta3pks/rust_utilities"
 description = "Rust utilities to help with projects"
