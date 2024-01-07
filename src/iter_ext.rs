@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
 pub trait IterUtils: Iterator {
@@ -9,6 +9,14 @@ pub trait IterUtils: Iterator {
         Self: std::marker::Sized,
     {
         self.collect::<HashMap<K, V>>()
+    }
+    fn collect_set<K>(self) -> HashSet<K>
+    where
+        HashSet<K>: FromIterator<Self::Item>,
+        K: Hash + Eq,
+        Self: std::marker::Sized,
+    {
+        self.collect::<HashSet<K>>()
     }
 }
 

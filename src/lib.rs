@@ -14,6 +14,7 @@ pub use base64::*;
 pub use hex::*;
 #[cfg(feature = "json")]
 pub use json::*;
+#[allow(unused_imports)]
 pub use macros::*;
 #[cfg(feature = "md5")]
 pub use md5::*;
