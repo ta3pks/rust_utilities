@@ -1,25 +1,32 @@
 [package]
 name = "rust_helpers"
-version = "2.4.0"
+version = "2.5.0"
 edition = "2021"
-repository="https://github.com/ta3pks/rust_utilities"
+repository = "https://github.com/ta3pks/rust_utilities"
 description = "Rust utilities to help with projects"
-license="MIT"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 base64_light = { version = "0.1.5", optional = true }
+futures = { version = "0.3.30", default-features = false }
 md5 = { version = "0.7.0", optional = true }
-serde = { version = "1.0.195", default-features = false, optional = true, features = ["std"] }
-serde_json = { version = "1.0.111", default-features = false, optional = true, features = ["std"] }
+rayon = { version = "1.8.0", optional = true }
+serde = { version = "1.0.195", default-features = false, optional = true, features = [
+  "std",
+] }
+serde_json = { version = "1.0.111", default-features = false, optional = true, features = [
+  "std",
+] }
 tap = "1.0.1"
-tokio = { version = "1.35.1", default-features=false,  optional = true }
+tokio = { version = "1.35.1", default-features = false, optional = true }
 
 [features]
-default = ["time_async","json","md5","base64"]
+default = ["time_async", "json", "md5", "base64"]
 md5 = ["dep:md5"]
 base64 = ["base64_light"]
-json = ["serde","serde_json"]
+json = ["serde", "serde_json"]
 async = []
-time_async = ["tokio/time","async"]
+time_async = ["tokio/time", "async"]
+rayon = ["dep:rayon"]
