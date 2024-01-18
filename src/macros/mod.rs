@@ -10,9 +10,46 @@ macro_rules! __rust_helpers_if_else__ {
     };
 }
 
+/// Match if macro provides a match like syntax to use make if statements
+/// ## Usage syntax:
+/// There are two syntaxes for this macro.
+/// ```
+/// //Unbound syntax
+/// let result = rust_helpers::match_if!(
+///         15<10 => 15;
+///         15>10 => {
+///             println!("15 is greater than 10");
+///             10
+///         };
+///         _ =>{
+///             println!("15 is equal to 10");
+///             0
+///         };
+/// );
+/// assert_eq!(result, 10);
+/// //Bound syntax
+/// rust_helpers::match_if!(
+/// with (15){
+///    (<10) => {println!("15 is less than 10");15};
+///    (>10) => {println!("15 is greater than 10");10};
+///    (==10) => {println!("15 is equal to 10");0};
+///    _ => panic!("This should not happen");
+///    }
+/// );
+/// ```
 #[macro_export]
 #[doc(hidden)]
 macro_rules! __rust_helpers_match_if__ {
+    (with ($base:expr) {
+        ($($cond1:tt)+)=> $block:expr; $(($($conds:tt)+) => $blocks:expr;)* $(_ => $block3:expr$(;)?)?
+    }
+)=>{
+        $crate::match_if!(
+            $base $($cond1)+ => $block;
+            $($base $($conds)+ => $blocks;)*
+            $(_ => $block3)?
+    )
+    };
     ($cond1:expr => $block:expr; $($conds:expr => $blocks:expr;)* $(_ => $block3:expr$(;)?)?) => {
         if $cond1 {
             $block
@@ -185,6 +222,19 @@ mod tests {
             a > b => a;
             a < b => b;
             _ => 0
+        );
+        assert_eq!(c, b);
+    }
+    #[test]
+    fn test_match_if_with() {
+        let a = 1;
+        let b = 2;
+        let c = match_if!(
+        with (a){
+             (> b) => a;
+             (< b) => b;
+            _ => 0;
+        }
         );
         assert_eq!(c, b);
     }
