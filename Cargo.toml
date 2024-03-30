@@ -12,15 +12,15 @@ license = "MIT"
 base64_light = { version = "0.1.5", optional = true }
 futures = { version = "0.3.30", default-features = false }
 md5 = { version = "0.7.0", optional = true }
-rayon = { version = "1.8.0", optional = true }
-serde = { version = "1.0.195", default-features = false, optional = true, features = [
+rayon = { version = "1.10.0", optional = true }
+serde = { version = "1.0.197", default-features = false, optional = true, features = [
   "std",
 ] }
-serde_json = { version = "1.0.111", default-features = false, optional = true, features = [
+serde_json = { version = "1.0.115", default-features = false, optional = true, features = [
   "std",
 ] }
 tap = "1.0.1"
-tokio = { version = "1.35.1", default-features = false, optional = true }
+tokio = { version = "1.37.0", default-features = false, optional = true }
 
 [features]
 default = ["time_async", "json", "md5", "base64"]
@@ -32,4 +32,4 @@ time_async = ["tokio/time", "async"]
 rayon = ["dep:rayon"]
 
 [dev-dependencies]
-serde = { version = "1.0.195", features = ["derive"] }
+serde = { version = "1.0.197", features = ["derive"] }
