@@ -25,3 +25,5 @@ pub use time::*;
 
 mod iter_ext;
 pub use iter_ext::*;
+mod std_sync_ext;
+pub use std_sync_ext::*;
