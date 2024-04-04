@@ -31,7 +31,7 @@ pub trait DurationExt {
     }
 }
 
-impl_for!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f64, f32);
+impl_for!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize, f64, f32, u128, i128);
 
 #[cfg(feature = "async")]
 type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
@@ -114,6 +114,40 @@ impl HMS for std::time::Duration {
 }
 pub fn now() -> SystemTime {
     SystemTime::now()
+}
+pub fn instant_now() -> std::time::Instant {
+    std::time::Instant::now()
+}
+pub trait InstantExt {
+    fn print_elapsed(&self);
+    fn reset(&mut self);
+    fn eprint_elapsed(&self);
+}
+impl InstantExt for std::time::Instant {
+    fn print_elapsed(&self) {
+        let elapsed = self.elapsed();
+        println!("{elapsed:?}");
+    }
+    fn eprint_elapsed(&self) {
+        let elapsed = self.elapsed();
+        eprintln!("{elapsed:?}");
+    }
+    fn reset(&mut self) {
+        *self = std::time::Instant::now();
+    }
+}
+impl InstantExt for std::time::SystemTime {
+    fn print_elapsed(&self) {
+        let elapsed = self.elapsed().unwrap_or_default();
+        println!("{elapsed:?}");
+    }
+    fn eprint_elapsed(&self) {
+        let elapsed = self.elapsed().unwrap_or_default();
+        eprintln!("{elapsed:?}");
+    }
+    fn reset(&mut self) {
+        *self = std::time::SystemTime::now();
+    }
 }
 #[cfg(test)]
 mod tests {
