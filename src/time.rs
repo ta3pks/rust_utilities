@@ -122,6 +122,8 @@ pub trait InstantExt {
     fn print_elapsed(&self);
     fn reset(&mut self);
     fn eprint_elapsed(&self);
+    fn print_elapsed_with_msg(&self, msg: &str);
+    fn eprint_elapsed_with_msg(&self, msg: &str);
 }
 impl InstantExt for std::time::Instant {
     fn print_elapsed(&self) {
@@ -135,6 +137,14 @@ impl InstantExt for std::time::Instant {
     fn reset(&mut self) {
         *self = std::time::Instant::now();
     }
+    fn print_elapsed_with_msg(&self, msg: &str) {
+        let elapsed = self.elapsed();
+        println!("{msg} {elapsed:?}");
+    }
+    fn eprint_elapsed_with_msg(&self, msg: &str) {
+        let elapsed = self.elapsed();
+        eprintln!("{msg} {elapsed:?}");
+    }
 }
 impl InstantExt for std::time::SystemTime {
     fn print_elapsed(&self) {
@@ -147,6 +157,14 @@ impl InstantExt for std::time::SystemTime {
     }
     fn reset(&mut self) {
         *self = std::time::SystemTime::now();
+    }
+    fn print_elapsed_with_msg(&self, msg: &str) {
+        let elapsed = self.elapsed().unwrap_or_default();
+        println!("{msg} {elapsed:?}");
+    }
+    fn eprint_elapsed_with_msg(&self, msg: &str) {
+        let elapsed = self.elapsed().unwrap_or_default();
+        eprintln!("{msg} {elapsed:?}");
     }
 }
 #[cfg(test)]
